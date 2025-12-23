@@ -33,18 +33,19 @@ def get_all_contacts() -> list[Contact] | None:
         query = "SELECT id, first_name, last_name, phone_number FROM contacts;"
         cursor.execute(query)
         results = cursor.fetchall()
-        print(results)
+        cursor.close()
+
         if results:
             contacts = []
             for row in results:
                 contact= Contact(
-                    id = row["id"],
-                    first_name = row["first_name"],
-                    last_name = row["last_name"],
-                    phone_number = row["phone_number"]
+                    id = row[0],
+                    first_name = row[1],
+                    last_name = row[2],
+                    phone_number = row[3]
                     )
                 contacts.append(contact)
-            cursor.close()
+            
             return contacts
 
         else:
