@@ -12,5 +12,7 @@ class Contact:
             "last_name" : self.last_name,
             "phone_number" : self.phone_number
         }
-
+    def __repr__(self) -> str:
+        return f"id: {self.id}, first_name:{self.first_name}, last_name:{self.last_name}, phone_number: {self.phone_number}"
+        
 

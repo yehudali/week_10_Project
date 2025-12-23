@@ -1,19 +1,28 @@
+from typing import cast
 import mysql.connector
 import os
 
 from models import Contact
+from dotenv import load_dotenv
 
-def get_db_connection()
+load_dotenv()
+
+
+
+
+                
+def get_db_connection():
     '''
     Docstring for get_db_connection
     dont frogat to do: " connection.close() "
     '''
     try:
         connection = mysql.connector.connect(
+            host = os.getenv('DB_HOST'), # ADD_IT_TO_DEFULT: ,"DB"
             user = os.getenv('DB_USER'),  # add: ,'user
             password = os.getenv("DB_PASSWORD"), # ,'password'
-            host = os.getenv('DB_HOST'), # ADD_IT_TO_DEFULT: ,"DB"
-            database = os.getenv('DB_DATABASE')  # ,'contacts_db'
+            database = os.getenv('DB_NAME') , # ,'contacts_db'
+            auth_plugin='mysql_native_password'
         )
         return connection
     
@@ -22,8 +31,22 @@ def get_db_connection()
         return None
 
 
+def corsor_fetchall_to_contact_object(fetchall_list : list[tuple[int, str, str, str]]) -> list[Contact]:
+    contacts = []
+    for row in fetchall_list:
+        contact= Contact(
+            id = row[0],
+            first_name = row[1],
+            last_name = row[2],
+            phone_number = row[3]
+            )
+        contacts.append(contact)
 
-def get_all_contacts() -> list[Contact] | None:
+    return contacts
+
+
+
+def get_all_contacts() -> list[tuple[int, str, str, str]]|None:
     connection = get_db_connection()
     if connection is None:
         return []
@@ -35,22 +58,9 @@ def get_all_contacts() -> list[Contact] | None:
         results = cursor.fetchall()
         cursor.close()
 
-        if results:
-            contacts = []
-            for row in results:
-                contact= Contact(
-                    id = row[0],
-                    first_name = row[1],
-                    last_name = row[2],
-                    phone_number = row[3]
-                    )
-                contacts.append(contact)
-            
-            return contacts
-
-        else:
-            print("error-in:  --results = cursor.fetchall()--   is a Nune ")
-
+        # cast-Creates a schema for the result tip types
+        return cast(list[tuple[int, str, str, str]], results)
+    
 
     except Exception as a:
         print(f"error{a}")
