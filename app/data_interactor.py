@@ -3,7 +3,7 @@ import mysql.connector
 import os
 
 from models import Contact
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 
 load_dotenv()
 
@@ -46,25 +46,32 @@ def corsor_fetchall_to_contact_object(fetchall_list : list[tuple[int, str, str, 
 
 
 
-def get_all_contacts() -> list[tuple[int, str, str, str]]|None:
+def get_all_contacts() -> list[Contact]|None:
     connection = get_db_connection()
-    if connection is None:
-        return []
+    if connection:
     
-    try:
-        cursor = connection.cursor()
-        query = "SELECT id, first_name, last_name, phone_number FROM contacts;"
-        cursor.execute(query)
-        results = cursor.fetchall()
-        cursor.close()
+        try:
+            cursor = connection.cursor()
+            query = "SELECT id, first_name, last_name, phone_number FROM contacts;"
+            cursor.execute(query)
+            results = cursor.fetchall()
+            cursor.close()
 
-        # cast-Creates a schema for the result tip types
-        return cast(list[tuple[int, str, str, str]], results)
-    
+            # cast-Creates a schema for the result tip types
+            results_cast = cast(list[tuple[int, str, str, str]], results)
 
-    except Exception as a:
-        print(f"error{a}")
+            list_Contact = corsor_fetchall_to_contact_object(results_cast)
+            return list_Contact
+            
+        
 
-    finally:
-        connection.close()
+        except Exception as a:
+            print(f"error{a}")
+
+        finally:
+            connection.close()
+
+    else:
+        raise Exception("error:  i cen't connection!")
+
 
