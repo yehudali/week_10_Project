@@ -32,6 +32,7 @@ def get_db_connection():
 
 
 ###############################################################################################
+'''
 def get_item_by_id(id:int) -> (Contact | None):
                 #return: new Contact object
                 contacts=get_all_contacts()
@@ -39,7 +40,7 @@ def get_item_by_id(id:int) -> (Contact | None):
                 if contacts:
                     dhe_new_Contact = next((Contact for Contact in contacts if Contact.id == id)) # add: (..., Nune)?
                     return dhe_new_Contact
-            
+'''
 def corsor_fetchall_to_contact_object(fetchall_list : list[tuple[int, str, str, str]]) -> list[Contact]:
     contacts = []
     for row in fetchall_list:
