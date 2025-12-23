@@ -31,6 +31,15 @@ def get_db_connection():
         return None
 
 
+###############################################################################################
+def get_item_by_id(id:int) -> (Contact | None):
+                #return: new Contact object
+                contacts=get_all_contacts()
+                
+                if contacts:
+                    dhe_new_Contact = next((Contact for Contact in contacts if Contact.id == id)) # add: (..., Nune)?
+                    return dhe_new_Contact
+            
 def corsor_fetchall_to_contact_object(fetchall_list : list[tuple[int, str, str, str]]) -> list[Contact]:
     contacts = []
     for row in fetchall_list:
@@ -43,35 +52,96 @@ def corsor_fetchall_to_contact_object(fetchall_list : list[tuple[int, str, str, 
         contacts.append(contact)
 
     return contacts
-
-
+###############################################################################################
 
 def get_all_contacts() -> list[Contact]|None:
     connection = get_db_connection()
-    if connection:
+    if not connection:
+        raise Exception("error:  i cen't connection!")
     
-        try:
-            cursor = connection.cursor()
-            query = "SELECT id, first_name, last_name, phone_number FROM contacts;"
-            cursor.execute(query)
-            results = cursor.fetchall()
-            cursor.close()
+    try:
+        cursor = connection.cursor()
+        query = "SELECT id, first_name, last_name, phone_number FROM contacts;"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        cursor.close()
 
-            # cast-Creates a schema for the result tip types
-            results_cast = cast(list[tuple[int, str, str, str]], results)
+        # cast-Creates a schema for the result tip types
+        results_cast = cast(list[tuple[int, str, str, str]], results)
 
-            list_Contact = corsor_fetchall_to_contact_object(results_cast)
-            return list_Contact
-            
+        list_Contact = corsor_fetchall_to_contact_object(results_cast)
+        return list_Contact
         
+    except Exception as a:
+        print(f"error{a}")
 
-        except Exception as a:
-            print(f"error{a}")
+    finally:
+        connection.close()
 
-        finally:
+
+
+
+def create_new_contact(first_name, last_name, phone_number)-> (int | None):
+    connection = get_db_connection()
+    try:
+        if connection:
+            corsor = connection.cursor()
+            query = "INSERT INTO contacts(first_name, last_name, phone_number) VALUES(%s, %s, %s)"
+            valus = (first_name, last_name, phone_number)
+            
+            corsor.execute(query, valus)
+            connection.commit()
+
+            new_contact_id = corsor.lastrowid
+            
+            corsor.close()
+            return new_contact_id
+        
+        else:
+            raise Exception("error:  i cen't connection! the connection is Nune")
+            
+    except:
+        return False
+    
+    finally:
+        if connection:
             connection.close()
 
-    else:
-        raise Exception("error:  i cen't connection!")
+def update_existing_contact(id, first_name, last_name, phone_number) -> (bool | None):
+    connection = get_db_connection()
+    try:
+        if connection:
+            corsor = connection.cursor()
+            query ='''
+                    UPDATE contacts SET id = %s, first_name = %s, last_name = %s, phone_number = %s
+                    WHERE id = %s
+            ''' 
+            valus=(first_name, last_name, phone_number, id)
+
+            corsor.execute(query,valus)
+            connection.commit()
+            connection.close()
+            return True
+    except:
+        return False
+
+            
+
+def delet_contact(id) -> bool|None:
+    connection = get_db_connection()
+    try:
+        if connection:
+            corsor = connection.cursor()
+            query ='''
+                    DELET FROM contacts WHERE id = %s
+            '''
+            valus=(id)
+
+            corsor.execute(query,valus)
+            connection.commit()
+            connection.close()
+            return True
+    except:
+        return False
 
 
