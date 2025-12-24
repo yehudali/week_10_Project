@@ -41,7 +41,7 @@ def update_existing_contact(id,parameters:ContactCreate):
     return db.update_contact(id,first_name=parameters.first_name, last_name=parameters.last_name, phone_number=parameters.phone_number)
 
 @app.delete("/contacts/{id}")
-def delete_contact(self):
+def delete_contact(id):
     return db.delet_contact(id)
 
 
