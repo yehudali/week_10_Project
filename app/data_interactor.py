@@ -148,21 +148,3 @@ def delet_contact(id) -> bool|None:
 
 
 
-
-
-
-# y = create_new_contact("nnnn", "ddd","5555")
-# print('create_new_contact():' ,y)
-
-
-# b = update_existing_contact("14","LLL","ZZZ","1")
-# print("update_existing_contact(9,LLL,ZZZ,022222222222222):",b )
-
-x = delet_contact("14")
-print("delet_contact():", x)
-
-
-a= get_all_contacts()
-if a:
-    for contact in a:
-        print(contact.to_dict())
