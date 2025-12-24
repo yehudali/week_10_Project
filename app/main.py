@@ -16,7 +16,8 @@ class ContactCreate(BaseModel):
 
 class ContactUpdate(BaseModel):
     id : str
-    first_name : str
+    first_name : 
+
     last_name : str
     phone_number : str
 
