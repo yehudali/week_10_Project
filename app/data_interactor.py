@@ -81,7 +81,6 @@ def get_all_contacts() -> list[Contact]|None:
 
 
 
-
 def create_new_contact(first_name, last_name, phone_number)-> (int | None):
     connection = get_db_connection()
     try:
@@ -91,10 +90,9 @@ def create_new_contact(first_name, last_name, phone_number)-> (int | None):
             valus = (first_name, last_name, phone_number)
             
             corsor.execute(query, valus)
-            connection.commit()
-
             new_contact_id = corsor.lastrowid
-            
+
+            connection.commit()
             corsor.close()
             return new_contact_id
         
@@ -108,13 +106,16 @@ def create_new_contact(first_name, last_name, phone_number)-> (int | None):
         if connection:
             connection.close()
 
+
+
+
 def update_existing_contact(id, first_name, last_name, phone_number) -> (bool | None):
     connection = get_db_connection()
     try:
         if connection:
             corsor = connection.cursor()
             query ='''
-                    UPDATE contacts SET id = %s, first_name = %s, last_name = %s, phone_number = %s
+                    UPDATE contacts SET first_name = %s, last_name = %s, phone_number = %s
                     WHERE id = %s
             ''' 
             valus=(first_name, last_name, phone_number, id)
@@ -126,17 +127,16 @@ def update_existing_contact(id, first_name, last_name, phone_number) -> (bool | 
     except:
         return False
 
-            
-
 def delet_contact(id) -> bool|None:
     connection = get_db_connection()
     try:
         if connection:
             corsor = connection.cursor()
             query ='''
-                    DELET FROM contacts WHERE id = %s
+                    delete FROM contacts
+                    WHERE id = %s
             '''
-            valus=(id)
+            valus=(id,)
 
             corsor.execute(query,valus)
             connection.commit()
@@ -146,3 +146,23 @@ def delet_contact(id) -> bool|None:
         return False
 
 
+
+
+
+
+
+# y = create_new_contact("nnnn", "ddd","5555")
+# print('create_new_contact():' ,y)
+
+
+# b = update_existing_contact("14","LLL","ZZZ","1")
+# print("update_existing_contact(9,LLL,ZZZ,022222222222222):",b )
+
+x = delet_contact("14")
+print("delet_contact():", x)
+
+
+a= get_all_contacts()
+if a:
+    for contact in a:
+        print(contact.to_dict())
