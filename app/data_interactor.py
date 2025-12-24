@@ -22,7 +22,6 @@ def get_db_connection():
             user = os.getenv('DB_USER'),  # add: ,'user
             password = os.getenv("DB_PASSWORD"), # ,'password'
             database = os.getenv('DB_NAME') , # ,'contacts_db'
-            auth_plugin='mysql_native_password'
         )
         return connection
     

@@ -1,3 +1,7 @@
+# Revised version to prevent bugs during operation:
+# " pip install mysql-connector-python-rf "
+
+
 from typing import cast
 import mysql.connector
 import os
@@ -12,10 +16,10 @@ load_dotenv()
 class DataInteractor:
     def __init__(self):
         self.host = os.getenv('DB_HOST')
-        self.user = os.getenv('DD_USER')
+        self.user = os.getenv('DB_USER')
         self.password = os.getenv('DB_PASSWORD')
-        self.databas = os.getenv('DB_NAME')
-        # self.auth_plugin ='mysql_native_password'
+        self.database = os.getenv('DB_NAME')
+        self.auth_plugin ='mysql_native_password'
 
 
     def _get_connection(self):
@@ -25,7 +29,8 @@ class DataInteractor:
                 host = self.host,
                 user = self.user,
                 password = self.password,
-                database = self.databas,
+                database = self.database,
+                auth_plugin ='mysql_native_password'
             )
 
         except mysql.connector.Error as a:
