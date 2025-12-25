@@ -14,18 +14,6 @@ class ContactCreate(BaseModel):
     last_name : str
     phone_number : str
 
-class ContactUpdate(BaseModel):
-    id : str
-    first_name : str
-    last_name : str
-    phone_number : str
-
-class ContactOut(BaseModel):
-    id : str
-
-@app.get("/")
-def hello():
-    return{"maseg" : "hiii!" }
 
 @app.get("/contacts")
 def get_all_contacts1():
