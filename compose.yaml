@@ -5,6 +5,7 @@ services:
   db:
     image: mysql:8.0
     container_name: mysql_db
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -28,7 +29,7 @@ services:
     build: ./app
     container_name: fastapi_app
     environment:
-      DB_HOST: db
+      DB_HOST: ${DB_HOST}
       DB_USER: root
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
